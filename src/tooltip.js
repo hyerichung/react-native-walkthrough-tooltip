@@ -449,7 +449,7 @@ class Tooltip extends Component {
     } = this.props;
 
     const hasChildren = React.Children.count(children) > 0;
-    const showTooltip = isVisible && !this.state.waitingForInteractions;
+    const showTooltip = isVisible && !this.state.waitingForInteractions && !this.isMeasuringChild;
     const ModalComponent = modalComponent || Modal;
 
     return (
