@@ -133,6 +133,7 @@ class Tooltip extends Component {
           ? invertPlacement(props.placement)
           : props.placement,
       measurementsFinished: false,
+      isPositionMeasuring: false,
       windowDims: Dimensions.get('window'),
     };
   }
@@ -268,6 +269,8 @@ class Tooltip extends Component {
           this.childWrapper.current &&
           typeof this.childWrapper.current.measure === 'function'
         ) {
+          this.setState({ isPositionMeasuring: true });
+
           this.childWrapper.current.measure(
             (x, y, width, height, pageX, pageY) => {
               const childRect = new Rect(pageX, pageY, width, height);
@@ -278,6 +281,8 @@ class Tooltip extends Component {
               } else {
                 this.doChildlessPlacement();
               }
+
+              this.setState({ isPositionMeasuring: false });
             },
           );
         } else {
@@ -449,7 +454,7 @@ class Tooltip extends Component {
     } = this.props;
 
     const hasChildren = React.Children.count(children) > 0;
-    const showTooltip = isVisible && !this.state.waitingForInteractions && !this.isMeasuringChild;
+    const showTooltip = isVisible && !this.state.waitingForInteractions && !this.state.isPositionMeasuring;
     const ModalComponent = modalComponent || Modal;
 
     return (
